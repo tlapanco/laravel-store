@@ -3,6 +3,28 @@
         <h2> Productos </h2>
 
         <a href="{{ route('producto.create') }}"> Agregar producto </a>
+
+        <section>
+            <form action="{{route('productos.index')}}" method="GET">
+                
+                <h3>Filtros</h3>
+                <label for="category">Categoria:</label>
+                <select name="category_id">
+                    @foreach($categories as $category)
+                    <option value="">Todas</option>
+                    <option value="{{$category->id}}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{$category->name}}</option>
+                    @endforeach
+                </select>
+                <label for="status">Disponibilidad:</label>
+                <select name="status">
+                    <option value="">Todos</option>
+                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Disponible</option>
+                    <option  value="0" {{ request('status') == '0' ? 'selected' : '' }}>No disponible</option>
+                </select>
+
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
         
         <table>
             <thead>

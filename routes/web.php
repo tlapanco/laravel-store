@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\ProductImageController;
 use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Models\Product;
@@ -29,15 +30,13 @@ Route::middleware(['auth'])->group( function ( ) {
 });
 
 
-Route::get('/', function(){
-    dd(Product::all()[0]->category->name);
-});
+// Route::get('/', function(){
+//     dd(Product::all()[0]->category->name);
+// });
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -18,4 +18,14 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function avaiableProducts(): int
+    {
+    	return $this->products()->where('status', 1)->count();    	
+    }
+
+    public function unavaiableProducts(): int
+    {
+    	return $this->products->where('status', 0)->count();
+    }
 }

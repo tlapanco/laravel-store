@@ -12,20 +12,33 @@ use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductFiltersRequest;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(ProductFiltersRequest $request): View
     {
-        $products = Product::withTrashed()->with(['productImages' => function ($query) {
+        $query = Product::query();
+
+        if($request->has('category_id') && $request->category_id != ''){
+            $query->where('category_id', $request->category_id);
+        }
+
+        if($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $products = $query->with(['productImages' => function ($query) {
             $query->take(1);
         }])->paginate(15);
-        // dd($products[0]) ;
         
-        return view('product.index', compact('products'));
+
+        $categories = Category::all();
+        
+        return view('product.index', compact(['products', 'categories']));
     }
 
     /**

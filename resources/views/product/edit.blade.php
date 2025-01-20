@@ -2,6 +2,23 @@
     <section>
     <h2> Detalle del producto </h2>
 
+    <section>
+            <p>Imagenes:</p>
+            <ul>
+                @if($producto->productImages->isNotEmpty())
+                @foreach($producto->productImages as $image)
+                <li>
+                    <img src="{{ asset('storage/' . $image->name) }}" width="150" height="auto">
+
+                    <a href="{{ route('product.image.destroy', $image->id) }}">Borrar</a>
+                </li>
+                @endforeach
+                @else
+                <p>Sin imagenes agregadas</p>
+                @endif
+            </ul>
+        </section>
+
     <form action="{{route('producto.update', $producto)}}" method="POST" enctype="multipart/form-data">
         @method('PUT')
         @csrf
@@ -34,20 +51,7 @@
 
         <label for="description">Descripción: </label>
         <input type="text" value="@if(@old('description')){{ @old('description') }}@else{{ $producto->description }}@endif" name="description"> 
-        @error('description')<span>{{ $message }}</span>@enderror
-
-        <section>
-            <p>Imagenes:</p>
-            <ul>
-                @foreach($producto->productImages as $image)
-                <li>
-                    <img src="{{ asset('storage/' . $image->name) }}">
-
-                    <a href="{{ route('product.image.destroy', $image->id) }}">Borrar</a>
-                </li>
-                @endforeach
-            </ul>
-        </section>
+        @error('description')<span>{{ $message }}</span>@enderror        
 
         <label for="productImages">Imagenes:</label>
         <input name="productImages[]" type="file" multiple>            
@@ -55,6 +59,8 @@
 
         <button type="submit"> Guardar </button>
     </form>
+
+    <a href="{{url()->previous()}}">Regresar</a>
 
     </section>
 </x-app-layout>

@@ -27,4 +27,5 @@ class ProductController extends Controller
     		return response()->json(['error' => 'Algo salió mal, intentelo más tarde']);
     	}
     }
+
 }

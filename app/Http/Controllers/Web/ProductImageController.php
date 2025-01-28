@@ -12,11 +12,14 @@ class ProductImageController extends Controller
 {
     public function destroy(string $id) 
     {
-    	$img = ProductImage::find($id);    	
-    	$producto = $img->product_id;    	
-    	Storage::delete( $img->name);
-    	$img->delete();
-
-    	return back();
+    	try {
+    		$img = ProductImage::find($id);    	
+    		$producto = $img->product_id;    	
+    		Storage::delete( $img->name);
+    		$img->delete();
+    		return back()->with('success', 'Imagen eliminada satisfactoriamente.');
+    	}catch(\Throwable $th){
+    		return back()->with('error', 'Algo salió mal, intentelo más tarde');
+    	}
     }
 }

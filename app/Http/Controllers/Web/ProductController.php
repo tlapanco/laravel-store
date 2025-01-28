@@ -74,16 +74,8 @@ class ProductController extends Controller
                 $newProduct->productImages()->save(new ProductImage(['name' => $newProduct->id . '/' . $name]));
             }
         }
-        return redirect()->route('productos.index');
+        return redirect()->route('productos.index')->with('success', 'Producto creado satisfactoriamente');
         
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -91,7 +83,7 @@ class ProductController extends Controller
      */
     public function edit(string $id): View
     {
-        $producto = Product::withTrashed()->with('productImages')->find($id);        
+        $producto = Product::with('productImages')->find($id);        
         $categories = Category::all();
         return view('product.edit', compact(['producto', 'categories']));
     }
@@ -101,7 +93,7 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, string $id)
     {        
-        $product = Product::withTrashed()->find($id);          
+        $product = Product::find($id);          
         
         $product->update($request->safe()->only([
             'name',
@@ -120,7 +112,7 @@ class ProductController extends Controller
             }
         }
                 
-        return redirect()->route('productos.index');
+        return redirect()->route('productos.index')->with('success', 'Producto editado satisfactoriamente.');
     }
 
     /**

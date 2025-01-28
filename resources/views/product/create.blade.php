@@ -1,48 +1,116 @@
 <x-app-layout>
-    <section>
-        <h2> Crear producto </h2>
+    <section class="dark:text-white p-3 flex flex-col gap-4 items-center xl:px-36">
+    <h2 class="font-bold text-xl text-center"> Agregar producto </h2>
 
-        <form action="{{route('producto.store')}}" method="POST" enctype="multipart/form-data">        
-            @csrf
-            <label for="name"> Nombre: </label>
-            <input type="text" value="@if(@old('name')){{ @old('name') }}@endif" name="name">
-            @error('name')<span>{{ $message }}</span>@enderror
+    <form action="{{route('producto.store')}}" method="POST" enctype="multipart/form-data" class="grid  gap-5 w-full">        
+        @csrf
+        <div class="px-1">
+            <x-input-label for="name"> Nombre: </x-input-label>
+            <x-text-input id="name" name="name" class="block w-full p-1 text-md" :value="old('name')" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>    
 
-            <label for="category"> Categoria: </label>        
-            <select id="category" name="category_id" >
-                <option value="" disabled @if(!old('category_id')) selected @endif> --Elija una categoria-- </option>
-                @foreach($categories as $c)            
+        <div>
+            <x-input-label for="category_id">Categoria: </x-input-label>  
+            <select id="category" name="category_id" class="w-full rounded-md dark:bg-gray-800 p-1" >
+                <option disabled selected value="">--seleccione una categoria--</option>
+                @foreach($categories as $c)
                 <option @if(old('category_id') == $c->id) selected @endif value="{{ $c->id }}">{{ $c->name }}</option>
                 @endforeach
             </select>
-            @error('category_id')<span>{{ $message }}</span>@enderror
+            <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
+        </div>        
 
-            <label for="price"> Precio: </label>
-            <input type="text" value="@if(@old('price')){{ @old('price') }}@endif" name="price">
-            @error('price')<span>{{ $message }}</span>@enderror
+        <div>
+            <x-input-label for="price"> Precio: </x-input-label>
+            <x-text-input id="price" name="price" class="block w-full p-1 text-md" :value="old('price')" />
+            <x-input-error :messages="$errors->get('price')" class="mt-2" />
+        </div>
 
-            <label for="status">Estado: </label>
-            <label for="status" >
-                <input name="status" @if(old('status') == 1) checked @endif name="status" type="radio" value="1"> 
-                Disponible 
-            </label>        
-            <label for="status">
-                <input name="status" @if(old('status') == 0) checked @endif name="status" type="radio" value="0">
-                No disponible 
+        <label for="status">Estado: </label>
+        <label for="status" >
+            <input name="status" name="status" type="radio" value="1" @if(old('status') == '1') checked @endif> 
+            Disponible 
+        </label>        
+        <label for="status">
+            <input name="status" name="status" type="radio" value="0" @if(old('status') == '0') checked @endif>
+            No disponible 
+        </label>
+        <x-input-error :messages="$errors->get('status')" class="mt-2" />
+
+        <div>
+            <x-input-label for="description"> Descripción: </x-input-label>
+            <x-text-area id="description" name="description" class="block w-full p-1 text-md h-24" :value="old('description')" ></x-text-area>
+            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+        </div>
+
+
+        <div class="flex items-center gap-4 w-full" id="dropzone">
+            <x-input-label for="productImages[]">Imagenes: </x-input-label>
+            <label class="flex flex-col items-center w-64 h-32 border-4 border-dashed border-gray-300 hover:border-gray-400 cursor-pointer p-2">
+                <div class="flex flex-col items-center justify-center px-2">
+                    <svg class="w-8 h-8 text-gray-400 group-hover:text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M16.88 7.93A4 4 0 0 1 14 14H8v2h2v2H6v-2h2v-2H4a4 4 0 0 1-.88-7.93 3 3 0 0 1 1.54 5.43V11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-.6a3 3 0 0 1 1.54-5.43A4 4 0 0 1 16.88 7.93z"/>
+                    </svg>
+                    <p class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600 text-center">Arrastra y suelta tus archivos aquí o haz clic para seleccionarlos</p>
+                </div>
+                <input type="file" multiple class="opacity-0" id="productImages" name="productImages[]" />
             </label>
-            @error('status')<span>{{ $message }}</span>@enderror
+        </div>
+        @error('productImages.*')
+        <x-input-error :messages="$message" class="mt-2" />
+        <p class="text-center">Por favor, vuelva a seleccionar sus archivos.</p>
+        @enderror
+        <div id="fileList" class="flex px-2 gap-4"></div>
 
-            <label for="description">Descripción: </label>
-            <input type="text" value="@if(@old('description')){{ @old('description') }}@endif" name="description"> 
-            @error('description')<span>{{ $message }}</span>@enderror
+        
+        
 
-            <label for="productImages">Imagenes:</label>
-            <input name="productImages[]" type="file" multiple>            
-            @error('productImages.*')<span >{{ $message }}</span>@enderror
+        <x-primary-button class="w-fit">Guardar</x-primary-button>
+    </form>
 
-            <button type="submit"> Guardar </button>
-            
-        </form>
+    <a href="{{route('productos.index')}}">
+        <x-secondary-button>Regresar</x-secondary-button>
+    </a>
 
     </section>
+
+    <script type="text/javascript">
+        document.getElementById('productImages').addEventListener('change', function(event) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = ''; // Limpia la lista de archivos
+
+            for (const file of event.target.files) {
+                const fileItem = document.createElement('p');
+                fileItem.textContent = file.name;                
+                fileList.appendChild(fileItem);
+            }
+        });
+        const dropzone = document.getElementById('dropzone');
+
+        dropzone.addEventListener('dragover', function(event) {
+            event.preventDefault();
+            dropzone.classList.add('border-blue-500');
+        });
+        dropzone.addEventListener('dragleave', function(event) {
+            dropzone.classList.remove('border-blue-500');
+        });
+        dropzone.addEventListener('drop', function(event) {
+            event.preventDefault();
+            dropzone.classList.remove('border-blue-500');
+            const files = event.dataTransfer.files;
+            const fileInput = document.getElementById('productImages');
+            fileInput.files = files;
+
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = ''; // Limpia la lista de archivos
+
+            for (const file of files) {
+                const fileItem = document.createElement('p');
+                fileItem.textContent = file.name;                
+                fileList.appendChild(fileItem);
+            }
+
+        });
+    </script>  
 </x-app-layout>

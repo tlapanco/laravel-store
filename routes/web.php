@@ -12,7 +12,7 @@ use App\Models\Product;
 Route::middleware(['auth'])->group(function () {
     Route::resource('productos', ProductController::class)->only(['index']);
     Route::resource('producto', ProductController::class)->except([
-        'index'
+        'index', 'show'
     ]);
     
 });
@@ -29,12 +29,7 @@ Route::middleware(['auth'])->group( function ( ) {
     Route::resource('categoria', CategoryController::class)->except(['show', 'index']);
 });
 
-
-// Route::get('/', function(){
-//     dd(Product::all()[0]->category->name);
-// });
-
-
+Route::redirect('/', '/dashboard');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

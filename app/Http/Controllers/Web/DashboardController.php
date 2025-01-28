@@ -15,10 +15,9 @@ class DashboardController extends Controller
     	$categories = Category::all();
 
     	$categoriesWithTotals = $categories->map(function($category){
-
-    		$category->total = $category->count();
     		$category->avaiableProductsCount = $category->avaiableProducts();
     		$category->unavaiableProductsCount = $category->unavaiableProducts();
+            $category->total = $category->avaiableProductsCount + $category->unavaiableProductsCount;
     		return $category;
     	});
 

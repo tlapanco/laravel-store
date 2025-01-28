@@ -30,19 +30,19 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
     	Category::create($request->safe()->only(['name']));
-    	return redirect()->route('categorias.index');
+    	return redirect()->route('categorias.index')->with('success', 'Categoria creada satisfactoriamente');
     }
 
     public function update(CategoryRequest $request, string $id)
     {
     	$category = Category::find($id);
     	$category->update($request->safe()->only(['name']));
-    	return redirect()->route('categorias.index');
+    	return redirect()->route('categorias.index')->with('success', 'categoria editada satisfactoriamente');
     }
 
     public function destroy (string $id)
     {
     	Category::find($id)->delete();
-    	return redirect()->route('categorias.index');
+    	return redirect()->route('categorias.index')->with('success', 'Categoria eliminada con exito');
     }
 }
